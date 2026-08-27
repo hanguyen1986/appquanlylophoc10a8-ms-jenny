@@ -164,9 +164,10 @@ export const StudentDirectoryView: React.FC<StudentDirectoryViewProps> = ({
 
   const handleExportExcel = () => {
     // Generate CSV for export
-    const headers = ["Mã HS", "Họ và tên", "Giới tính", "Ngày sinh", "Tổ", "Chức vụ", "ĐTB", "Học lực", "Điểm nề nếp", "Hạnh kiểm", "Phụ huynh", "SĐT PH", "Địa chỉ"];
-    const rows = students.map(s => [
+    const headers = ["Mã HS", "Lớp", "Họ và tên", "Giới tính", "Ngày sinh", "Tổ", "Chức vụ", "ĐTB", "Học lực", "Điểm nề nếp", "Hạnh kiểm", "Phụ huynh", "SĐT PH", "Địa chỉ", "Lưu ý"];
+    const rows = filteredStudents.map(s => [
       `"${s.code}"`,
+      `"${s.className || '10A8'}"`,
       `"${s.name}"`,
       `"${s.gender}"`,
       `"${s.dob}"`,
@@ -178,14 +179,15 @@ export const StudentDirectoryView: React.FC<StudentDirectoryViewProps> = ({
       `"${s.conductRank}"`,
       `"${s.parents[0]?.name || ''}"`,
       `"${s.parents[0]?.phone || ''}"`,
-      `"${s.address || ''}"`
+      `"${s.address || ''}"`,
+      `"${s.health?.physicalEducationNote !== 'Bình thường' ? s.health?.physicalEducationNote : s.psychology?.supportLevel || ''}"`
     ]);
     const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
     const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `DanhSach_Lop10A8_MsJenny_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute('download', `DanhSach_HocSinh_${selectedClassFilter}_${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
