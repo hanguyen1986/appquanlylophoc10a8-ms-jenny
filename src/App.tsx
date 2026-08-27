@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   MOCK_STUDENTS, 
   MOCK_ATTENDANCE_TODAY, 
@@ -18,7 +18,8 @@ import {
   ParentAppointment, 
   CalendarTask, 
   PeriodicReport,
-  AttendanceStatus 
+  AttendanceStatus,
+  ClassInfo
 } from './types';
 
 import { Sidebar } from './components/Sidebar';
@@ -37,6 +38,7 @@ import { GoogleDatabaseModal } from './components/GoogleDatabase/GoogleDatabaseM
 import { GoogleDatabaseService, GoogleDatabaseConfig } from './services/googleDatabaseService';
 import { ApiKeySettingsModal } from './components/AI/ApiKeySettingsModal';
 import { GeminiService } from './services/geminiService';
+import { ClassListModal } from './components/Classes/ClassListModal';
 
 import { 
   LayoutDashboard, 
@@ -53,11 +55,70 @@ import {
   X
 } from 'lucide-react';
 
+const INITIAL_CLASSES: ClassInfo[] = [
+  {
+    id: '10A8',
+    name: 'Lớp 10A8',
+    grade: 10,
+    schoolYear: '2025 - 2026',
+    homeroomTeacher: 'Ms Jenny',
+    room: 'Phòng 302',
+    totalStudents: 36,
+    description: 'Lớp chuyên Toán - Tiếng Anh (Chủ nhiệm chính)',
+    isPrimary: true,
+  },
+  {
+    id: '10A1',
+    name: 'Lớp 10A1',
+    grade: 10,
+    schoolYear: '2025 - 2026',
+    homeroomTeacher: 'Thầy Hoàng Minh',
+    room: 'Phòng 301',
+    totalStudents: 38,
+    description: 'Lớp Tự nhiên A1',
+  },
+  {
+    id: '10A2',
+    name: 'Lớp 10A2',
+    grade: 10,
+    schoolYear: '2025 - 2026',
+    homeroomTeacher: 'Cô Lê Thu Hương',
+    room: 'Phòng 303',
+    totalStudents: 40,
+    description: 'Lớp Xã hội D1',
+  },
+  {
+    id: '11A8',
+    name: 'Lớp 11A8',
+    grade: 11,
+    schoolYear: '2025 - 2026',
+    homeroomTeacher: 'Thầy Vũ Đức',
+    room: 'Phòng 402',
+    totalStudents: 42,
+    description: 'Lớp khối 11 Tự nhiên',
+  },
+  {
+    id: '12A8',
+    name: 'Lớp 12A8',
+    grade: 12,
+    schoolYear: '2025 - 2026',
+    homeroomTeacher: 'Cô Mai Phương',
+    room: 'Phòng 502',
+    totalStudents: 39,
+    description: 'Lớp 12 Luyện thi Tốt nghiệp',
+  },
+];
+
 export default function App() {
   // Global Navigation State
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
+
+  // Class Management State
+  const [classes, setClasses] = useState<ClassInfo[]>(INITIAL_CLASSES);
+  const [selectedClassId, setSelectedClassId] = useState<string>('10A8');
+  const [showClassListModal, setShowClassListModal] = useState<boolean>(false);
 
   // API Key & Model Settings Modal State
   const [showApiKeyModal, setShowApiKeyModal] = useState<boolean>(false);
@@ -346,6 +407,12 @@ export default function App() {
         onQuickSyncDatabase={() => handleSyncFromGoogle()}
         hasApiKey={hasApiKey}
         onOpenApiKeyModal={() => setShowApiKeyModal(true)}
+        selectedClass={selectedClassId}
+        onSelectClass={(cls) => {
+          setSelectedClassId(cls);
+          showToast(`Đã chuyển sang quản lý Lớp ${cls}`, 'success');
+        }}
+        onOpenClassListModal={() => setShowClassListModal(true)}
       />
 
       <div className="flex-1 flex overflow-hidden">
@@ -363,6 +430,8 @@ export default function App() {
           isCollapsed={isSidebarCollapsed}
           onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
           onOpenDatabaseModal={() => setShowDatabaseModal(true)}
+          onOpenClassListModal={() => setShowClassListModal(true)}
+          selectedClassName={selectedClassId}
         />
 
         {/* Main Content Scrollable Area */}
@@ -395,6 +464,10 @@ export default function App() {
               onQuickSyncDatabase={() => handleSyncFromGoogle()}
               isDatabaseSyncing={isDatabaseSyncing}
               isDatabaseConnected={databaseConfig.isConnected}
+              selectedClassId={selectedClassId}
+              onSelectClass={(cls) => setSelectedClassId(cls)}
+              onOpenClassListModal={() => setShowClassListModal(true)}
+              classes={classes}
             />
           )}
 
@@ -523,6 +596,22 @@ export default function App() {
           onSave={handleSaveStudent}
         />
       )}
+
+      {/* MODAL 3: Quản Lý & Chuyển Đổi Danh Sách Lớp Học */}
+      <ClassListModal
+        isOpen={showClassListModal}
+        onClose={() => setShowClassListModal(false)}
+        classes={classes}
+        selectedClassId={selectedClassId}
+        onSelectClass={(classId) => {
+          setSelectedClassId(classId);
+          showToast(`Đã chuyển sang quản lý Lớp ${classId}`, 'success');
+        }}
+        onAddNewClass={(newClass) => {
+          setClasses((prev) => [...prev, newClass]);
+          showToast(`Đã thêm mới ${newClass.name} thành công!`, 'success');
+        }}
+      />
     </div>
   );
 }
