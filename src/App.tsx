@@ -38,7 +38,7 @@ import { GoogleDatabaseModal } from './components/GoogleDatabase/GoogleDatabaseM
 import { GoogleDatabaseService, GoogleDatabaseConfig } from './services/googleDatabaseService';
 import { ApiKeySettingsModal } from './components/AI/ApiKeySettingsModal';
 import { GeminiService } from './services/geminiService';
-import { ClassListModal } from './components/Classes/ClassListModal';
+import { ClassListModal } from './components/Students/ClassListModal';
 
 import { 
   LayoutDashboard, 
