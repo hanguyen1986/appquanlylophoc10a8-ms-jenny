@@ -36,8 +36,8 @@ interface NavbarProps {
   onQuickSyncDatabase: () => void;
   hasApiKey: boolean;
   onOpenApiKeyModal: () => void;
-  selectedClass: string;
-  onSelectClass: (cls: string) => void;
+  selectedClass?: string;
+  onSelectClass?: (cls: string) => void;
   onOpenClassListModal?: () => void;
 }
 
@@ -55,8 +55,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onQuickSyncDatabase,
   hasApiKey,
   onOpenApiKeyModal,
-  selectedClass,
-  onSelectClass,
+  selectedClass = '10A8',
+  onSelectClass = () => {},
   onOpenClassListModal,
 }) => {
   const [showNotifications, setShowNotifications] = useState(false);
