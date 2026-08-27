@@ -1,0 +1,6 @@
+{
+  "name": "QUẢN LÝ LỚP HỌC 10A8-MS JENNY",
+  "description": "Hệ thống Quản lý Lớp học 10A8 - Ms Jenny: sổ chủ nhiệm điện tử, kết nối trực tuyến cơ sở dữ liệu Google Sheets, hồ sơ học sinh, chuyên cần, nề nếp, sổ điểm, liên lạc phụ huynh và báo cáo định kỳ.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
