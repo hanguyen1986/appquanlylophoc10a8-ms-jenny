@@ -508,7 +508,7 @@ export const StudentDirectoryView: React.FC<StudentDirectoryViewProps> = ({
                           </h3>
                         </div>
                         <div className="text-[11px] text-slate-500">
-                          <span>{st.code}</span> • <span className="font-semibold text-slate-700">Tổ {st.group}</span>
+                          <span>{st.code}</span> • <span className="font-semibold text-slate-700">Tổ {st.group}</span> • <span className="text-slate-400">{st.className || '10A8'}</span>
                         </div>
                       </div>
                     </div>
